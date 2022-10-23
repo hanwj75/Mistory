@@ -3,43 +3,25 @@ import { db } from "../app.js";
 //user
 //회원가입
 export const userData = (req, res) => {
-  db.collection("IDcounter").findOne({ name: "userIdNumber" }, (err, result) => {
-    console.log(result.ALLID);
-
-    let totalID = result.ALLID;
-
-    db.collection("user").insertOne({
-      _id: totalID + 1,
+  db.collection("user").insertOne(
+    {
       userid: req.body.userId,
       password: req.body.password,
       userName: req.body.userName,
       userEmail: req.body.userEmail,
       userPhone: req.body.userPhone,
-
-      function(req, res) {
-        console.log(err);
-        console.log("저장완료");
-        db.collection("IDcounter").updateOne(
-          { name: "userIdNumber" },
-          { $inc: { ALLID: 1 } },
-          (err, result) => {
-            if (result) {
-              res.status(200);
-            } else if (err) {
-              res.status(400).json({ message: "문제가 발생했습니다." });
-            }
-          }
-        );
-      },
-    });
-  });
+    },
+    (err, result) => {
+      res.json({ join: result });
+    }
+  );
 };
 
 //로그인
 export const userLogin = (req, res) => {
   console.log("1313");
   const { userId, password } = req.body;
-  db.collection("user").findOne({ userId }, (err, result) => {
+  db.collection("user").findOne({ userId, password }, (err, result) => {
     if (!result) {
       console.log("err");
       res.status(400).json({ message: "아이디가 틀렸습니다." });
@@ -88,7 +70,7 @@ export const writeService = async (req, res) => {
         let totalDiary = result.allDiary;
 
         db.collection("diary").insertOne({
-          _id: totalDiary - 1,
+          _id: totalDiary + 1,
           contents: diaryPost,
 
           function(req, res) {

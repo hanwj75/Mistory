@@ -19,11 +19,9 @@ export const userData = (req, res) => {
 
 //로그인
 export const userLogin = (req, res) => {
-  console.log("1313");
   const { userId, password } = req.body;
-  db.collection("user").findOne({ userId, password }, (err, result) => {
+  db.collection("user").findOne({ userId: userId, password: password }, (err, result) => {
     if (!result) {
-      console.log("err");
       res.status(400).json({ message: "아이디가 틀렸습니다." });
       return;
     }
@@ -47,8 +45,8 @@ export const userLogin = (req, res) => {
 //회원탈퇴
 
 export const userRemove = (req, res) => {
-  req.user._id = parseInt(req.user._id);
-  let removeId = { removeId: req.user._Id };
+  req._id = req.userId;
+  let removeId = { removeId: req._id };
   db.collection("user").deleteOne(removeId, (err, result) => {
     console.log("삭제완료");
     if (!result) {

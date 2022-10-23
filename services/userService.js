@@ -57,33 +57,31 @@ export const userRemove = (req, res) => {
 //diary
 
 //일기 쓰기
-export const writeService = async (req, res) => {
+export const writeService = (req, res) => {
   const diaryPost = req.body.contents;
 
-  await db.collection("diary").insertOne({ contents: diaryPost }, (err, result) => {
-    if (result) {
-      db.collection("diaryCounter").findOne({ name: "diaryNumber" }, (err, result) => {
-        console.log(result.allDiary);
+  db.collection("diaryCounter").findOne({ name: "diaryNumber" }, (err, result) => {
+    console.log(result.allDiary);
+    let allDiaryList = result.allDiary;
 
-        let totalDiary = result.allDiary;
-
-        db.collection("diary").insertOne({
-          _id: totalDiary + 1,
-          contents: diaryPost,
-
-          function(req, res) {
-            console.log("저장완료");
-            db.collection("diaryCounter").updateOne(
-              { name: "diaryNumber" },
-              { $inc: { allDiary: 1 } },
-              (err, result) => {
-                if (result) res.status(200).json({ message: "쓰기 완료" });
-              }
-            );
-          },
-        });
-      });
-    }
+    db.collection("diary").insertOne(
+      {
+        _id: allDiaryList + 1,
+        contents: diaryPost,
+      },
+      function (err, result) {
+        console.log(result);
+        db.collection("diaryCounter").updateOne(
+          { name: "diaryNumber" },
+          { $inc: { allDiary: 1 } },
+          function (err, result) {
+            if (err) {
+              return console.log(err);
+            }
+          }
+        );
+      }
+    );
   });
 };
 
@@ -93,7 +91,7 @@ export const writeService = async (req, res) => {
 export const diaryUpdates = (req, res) => {
   const diaryPost = req.body.contents;
   db.collection("diary").updateOne(
-    { _id: parseInt(req.body.diaryid) },
+    { _id: parseInt(req.body.diaryId) },
     { $set: { contents: diaryPost } },
     (err, result) => {
       if (!result) {

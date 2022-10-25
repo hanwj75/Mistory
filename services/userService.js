@@ -46,8 +46,10 @@ export const userLogin = (req, res) => {
 //회원탈퇴
 
 export const userRemove = (req, res) => {
-  req._id = req.userId;
-  let removeId = { removeId: req._id };
+  const { id } = req.params;
+  console.log(id);
+  let removeId = { removeId: id };
+
   db.collection("user").deleteOne(removeId, (err, result) => {
     console.log("삭제완료");
     if (!result) {
@@ -64,13 +66,16 @@ export const writeService = (req, res) => {
   db.collection("diaryCounter").findOne({ name: "diaryNumber" }, (err, result) => {
     console.log(result.allDiary);
     let allDiaryList = result.allDiary;
+    let createdAt = new Date();
 
     db.collection("diary").insertOne(
       {
         _id: allDiaryList + 1,
         contents: diaryPost,
+        createdAt,
       },
       function (err, result) {
+        console.log(createdAt);
         console.log(result);
         db.collection("diaryCounter").updateOne(
           { name: "diaryNumber" },
@@ -79,7 +84,6 @@ export const writeService = (req, res) => {
             if (err) {
               return console.log(err);
             }
-            res.json({ write: result });
           }
         );
       }
@@ -92,10 +96,11 @@ export const writeService = (req, res) => {
 //db에 콜렉선 다이어리에 저장된 콘텐츠오브젝트 중 하나를 찾아서 수정 후 업데이트 해줌
 export const diaryUpdates = (req, res) => {
   const { contents } = req.body;
+  const updatedAt = new Date();
 
   db.collection("diary").updateOne(
     { _id: parseInt(req.params.id) },
-    { $set: { contents } },
+    { $set: { contents, updatedAt: updatedAt } },
     (err, result) => {
       if (!result) {
         res.status(400).json({ message: "수정실패" });

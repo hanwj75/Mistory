@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { db } from "../app.js";
+
 //user
 //회원가입
 export const userData = (req, res) => {
@@ -78,6 +79,7 @@ export const writeService = (req, res) => {
             if (err) {
               return console.log(err);
             }
+            res.json({ write: result });
           }
         );
       }
@@ -89,10 +91,11 @@ export const writeService = (req, res) => {
 
 //db에 콜렉선 다이어리에 저장된 콘텐츠오브젝트 중 하나를 찾아서 수정 후 업데이트 해줌
 export const diaryUpdates = (req, res) => {
-  const diaryPost = req.body.contents;
+  const { contents } = req.body;
+
   db.collection("diary").updateOne(
-    { _id: parseInt(req.body.diaryId) },
-    { $set: { contents: diaryPost } },
+    { _id: parseInt(req.params.id) },
+    { $set: { contents } },
     (err, result) => {
       if (!result) {
         res.status(400).json({ message: "수정실패" });

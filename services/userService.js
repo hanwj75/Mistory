@@ -95,3 +95,17 @@ export const diaryUpdates = (req, res) => {
     }
   );
 };
+
+//일기 삭제하기
+
+//diary 콜렉션에 있는 데이터중 _id가 내가 삭제한 게시물의 _id와 같으면 삭제시켜줌
+
+export const diaryRemove = (req, res) => {
+  db.collection("diary").deleteOne({ _id: parseInt(req.params.id) }, (err, result) => {
+    console.log("삭제완료");
+    res.status(200).json({ message: "삭제성공" });
+    if (!result) {
+      res.status(400).json({ message: "삭제실패" });
+    }
+  });
+};

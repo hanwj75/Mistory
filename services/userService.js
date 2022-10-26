@@ -6,7 +6,7 @@ import { db } from "../app.js";
 export const userData = (req, res) => {
   db.collection("user").insertOne(
     {
-      userid: req.body.userId,
+      userId: req.body.userId,
       password: req.body.password,
       userName: req.body.userName,
       userEmail: req.body.userEmail,
@@ -44,14 +44,11 @@ export const userLogin = (req, res) => {
   });
 };
 //회원탈퇴
-
+// 삭제하려는 계정의 id와 db에 user콜렉션에 저장된 userId와 일치하면 삭제시켜줌
 export const userRemove = (req, res) => {
-  const { id } = req.params;
-  console.log(id);
-  let removeId = { removeId: id };
-
-  db.collection("user").deleteOne(removeId, (err, result) => {
+  db.collection("user").deleteOne(req.body, (err, result) => {
     console.log("삭제완료");
+    res.status(200).json({ message: "삭제성공" });
     if (!result) {
       res.status(400).json({ message: "삭제실패" });
     }

@@ -31,16 +31,6 @@ export const userLogin = (req, res) => {
       res.status(400).json({ message: "비밀번호가 틀렸습니다." });
       return;
     }
-
-    const secretKey = process.env.SECRET_KEY;
-
-    jwt.sign({ userId }, secretKey, (err, token) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      res.json({ token });
-    });
   });
 };
 //회원탈퇴

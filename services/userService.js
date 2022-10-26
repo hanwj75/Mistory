@@ -109,3 +109,14 @@ export const diaryRemove = (req, res) => {
     }
   });
 };
+
+//일기 목록
+//diary 콜렉션에 있는 파일 전부 보여줌
+export const diarysList = (req, res) => {
+  db.collection("diary")
+    .find()
+    .toArray((err, result) => {
+      res.json({ result });
+      console.log(result);
+    });
+};

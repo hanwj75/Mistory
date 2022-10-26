@@ -5,6 +5,9 @@ import { MongoClient } from "mongodb";
 import cors from "cors";
 import userRouter from "./routes/user.js";
 import diaryRouter from "./routes/diary.js";
+import mypageRouter from "./routes/mypage.js";
+import { diarysList } from "./services/userService.js";
+import { userToken } from "./services/jwtToken.js";
 const app = express();
 config();
 
@@ -24,6 +27,8 @@ app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/diary", diaryRouter);
+app.use("/mypage", mypageRouter);
+app.get("/diarys", diarysList, userToken);
 //회원가입을 하면 db에 데이터를 저장하고 저장이 완료되면 _id를 1올려줌
 
 // 로그인

@@ -86,7 +86,7 @@ export const diaryUpdates = (req, res) => {
   const updatedAt = new Date();
 
   db.collection("diary").updateOne(
-    { _id: parseInt(req.params.id) },
+    { _id: parseInt(req.body.id) },
     { $set: { contents, updatedAt: updatedAt } },
     (err, result) => {
       if (!result) {
@@ -101,7 +101,7 @@ export const diaryUpdates = (req, res) => {
 //diary 콜렉션에 있는 데이터중 _id가 내가 삭제한 게시물의 _id와 같으면 삭제시켜줌
 
 export const diaryRemove = (req, res) => {
-  db.collection("diary").deleteOne({ _id: parseInt(req.params.id) }, (err, result) => {
+  db.collection("diary").deleteOne({ _id: parseInt(req.body.id) }, (err, result) => {
     console.log("삭제완료");
     res.status(200).json({ message: "삭제성공" });
     if (!result) {
@@ -119,4 +119,14 @@ export const diarysList = (req, res) => {
       res.json({ result });
       console.log(result);
     });
+};
+
+//마이페이지
+//로그인한 사람이 마이페이지로 들어가면 id,이름,이메일,폰번호를 보여줌
+export const userPage = (req, res) => {
+  db.collection("user").findOne({ userId: req.params.id }, (err, result) => {
+    console.log(result);
+    const { userId, userName, userEmail, userPhone } = result;
+    res.json({ userId: userId, userName, userEmail, userPhone });
+  });
 };

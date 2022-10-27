@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 export const loginToken = (req, res) => {
   const secretKey = process.env.SECRET_KEY;
 

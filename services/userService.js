@@ -1,3 +1,4 @@
+import { Console } from "console";
 import jwt from "jsonwebtoken";
 import { db } from "../app.js";
 
@@ -129,4 +130,24 @@ export const userPage = (req, res) => {
     const { userId, userName, userEmail, userPhone } = result;
     res.json({ userId: userId, userName, userEmail, userPhone });
   });
+};
+
+//마이페이지 회원정보 수정
+//회원정보 수정 요청이 오면 이메일,폰번호,비밀번호를 바꿀수있음
+//db의 있는 유저의 데이터중 id가 일치하는 데이터의 정보를 수정한 데이터로 업데이트함
+
+export const userPageUpdate = (req, res) => {
+  const { userEmail, userPhone, password } = req.body;
+  db.collection("user").updateOne(
+    { userId: req.params.id },
+    {
+      $set: { userEmail, userPhone, password },
+    },
+    (err, result) => {
+      res.status(200).json({ message: "수정성공" });
+      if (!result) {
+        res.status(400).json({ message: "수정실패" });
+      }
+    }
+  );
 };

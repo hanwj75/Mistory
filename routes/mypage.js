@@ -1,11 +1,11 @@
 import express from "express";
 import { userToken } from "../services/jwtToken.js";
-import { userPage } from "../services/userService.js";
+import { userPage, userPageUpdate } from "../services/userService.js";
 
 let router = express.Router();
 
-router.get("/:id", userPage);
+router.get("/:id", userToken, userPage);
 
-router.put("/update/:id");
+router.put("/update/:id", userPageUpdate);
 
 export default router;

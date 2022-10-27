@@ -6,6 +6,6 @@ let router = express.Router();
 
 router.get("/:id", userToken, userPage);
 
-router.put("/update/:id", userPageUpdate);
+router.put("/update/:id", userToken, userPageUpdate);
 
 export default router;

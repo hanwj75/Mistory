@@ -28,7 +28,7 @@ app.use(cors());
 app.use("/user", userRouter);
 app.use("/diary", diaryRouter);
 
-app.get("/diarys", diarysList, userToken);
+app.get("/diaries", diarysList, userToken);
 app.use("/mypage", mypageRouter);
 //회원가입을 하면 db에 데이터를 저장하고 저장이 완료되면 _id를 1올려줌
 

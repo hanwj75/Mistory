@@ -19,15 +19,17 @@ import jwt from "jsonwebtoken";
 //     });
 // const secretKey = process.env.SECRET_KEY;
 
-export const verifySignToken = (req, res) => {
+export const verifyToken = (req, res) => {
   const secretKey = process.env.SECRET_KEY;
-  jwt.verify(token, secretKey, (err, decoded) => {
-    console.log(token);
-    if (!decoded) {
-      res.status(400).json({ message: "토큰오류", err });
+  const tokenRaw = req.headers.authorization.split(" ")[1];
+
+  jwt.verify(tokenRaw, secretKey, (err, decoded) => {
+    if (err) {
+      console.log(err);
+      return;
     }
     if (decoded) {
-      res.status(200).json({ message: "토큰확인", decoded });
+      console.log(decoded);
     }
   });
 };

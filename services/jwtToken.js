@@ -19,17 +19,39 @@ import jwt from "jsonwebtoken";
 //     });
 // const secretKey = process.env.SECRET_KEY;
 
-export const verifyToken = (req, res) => {
-  const secretKey = process.env.SECRET_KEY;
-  const tokenRaw = req.headers.authorization.split(" ")[1];
+// export const verifyToken = (req, res) => {
+//   const secretKey = process.env.SECRET_KEY;
+//   const tokenRaw = req.headers.authorization.split(" ")[1];
+//   let token;
 
-  jwt.verify(tokenRaw, secretKey, (err, decoded) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    if (decoded) {
-      console.log(decoded);
-    }
+//   jwt.verify(tokenRaw, secretKey, (err, decoded) => {
+//     if (err) {
+//       console.log(err);
+//       return;
+//     }
+//     if (decoded) {
+//       console.log(decoded.userId);
+//       token = decoded.userId;
+//       // return decoded.userId;
+//     }
+//     console.log("token ====>", token);
+//   });
+
+//   return token;
+// };
+
+export const verifyToken = (req, res) => {
+  return new Promise((resolve, reject) => {
+    const secretKey = process.env.SECRET_KEY;
+    const tokenRaw = req.headers.authorization.split(" ")[1];
+
+    jwt.verify(tokenRaw, secretKey, (err, decoded) => {
+      if (err) {
+        reject(err);
+      }
+      if (decoded) {
+        resolve(decoded.userId);
+      }
+    });
   });
 };

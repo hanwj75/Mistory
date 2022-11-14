@@ -1,10 +1,10 @@
 import express from "express";
-import { verifyToken } from "../services/middleware.js";
+import { tokenMiddleware } from "../services/middleware.js";
 
 import { diaryRemove, diaryUpdates, writeService } from "../services/userService.js";
 let router = express.Router();
 
-router.post("/write", verifyToken, writeService);
+router.post("/write", tokenMiddleware, writeService);
 
 router.put("/:id", diaryUpdates);
 

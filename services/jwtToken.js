@@ -40,18 +40,40 @@ import jwt from "jsonwebtoken";
 //   return token;
 // };
 
-export const verifyToken = (req, res) => {
-  return new Promise((resolve, reject) => {
-    const secretKey = process.env.SECRET_KEY;
-    const tokenRaw = req.headers.authorization.split(" ")[1];
+// export const verifyToken = (req, res) => {
+//   return new Promise((resolve, reject) => {
+//     const secretKey = process.env.SECRET_KEY;
+//     const tokenRaw = req.headers.authorization.split(" ")[1];
 
-    jwt.verify(tokenRaw, secretKey, (err, decoded) => {
-      if (err) {
-        reject(err);
-      }
-      if (decoded) {
-        resolve(decoded.userId);
-      }
-    });
-  });
-};
+//     jwt.verify(tokenRaw, secretKey, (err, decoded) => {
+//       if (err) {
+//         reject(err);
+//       }
+//       if (decoded) {
+//         resolve(decoded.userId);
+//       }
+//     });
+//   });
+// };
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+// eyJ1c2VySWQiOiJoeWh5aHkiLCJpYXQiOjE2Njg0OTAwMTJ9.sv3zSrthkIKQfwSLn_erWax9u_NEHtaxbA8XdZdVDoo
+export const verifyToken = (req,res)=>{
+  const tokenRaw = req.headers.authorization.split(" ")[1]
+  const secretKey = process.env.SECRET_KEY
+  let token
+  jwt.verify(tokenRaw,secretKey,(err,decoded)=>{
+    if(err){
+      console.log(err)
+    return
+  }
+    if(decoded){
+      console.log(decoded)
+      token=decoded.userId
+      
+    return decoded.userId
+  }
+    console.log('token-->',token)
+  })
+  return token
+}

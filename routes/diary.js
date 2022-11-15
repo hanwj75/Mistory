@@ -1,6 +1,7 @@
 import express from "express";
 import { tokenMiddleware } from "../services/middleware.js";
 
+
 import { diaryRemove, diaryUpdates, writeService } from "../services/userService.js";
 let router = express.Router();
 

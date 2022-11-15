@@ -90,6 +90,8 @@ export const writeService = (req, res) => {
           function (err, result) {
             if (err) {
               return console.log(err);
+            } else {
+              res.status(200).json({ message: "작성완료" });
             }
           }
         );

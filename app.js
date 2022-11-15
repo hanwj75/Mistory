@@ -7,6 +7,7 @@ import userRouter from "./routes/user.js";
 import diaryRouter from "./routes/diary.js";
 import mypageRouter from "./routes/mypage.js";
 import { diarysList } from "./services/userService.js";
+import { tokenMiddleware } from "./services/middleware.js";
 
 const app = express();
 config();
@@ -28,7 +29,7 @@ app.use(cors());
 app.use("/user", userRouter);
 app.use("/diary", diaryRouter);
 
-app.get("/diaries", diarysList);
+app.get("/diaries", tokenMiddleware, diarysList);
 app.use("/mypage", mypageRouter);
 
 //회원가입을 하면 db에 데이터를 저장하고 저장이 완료되면 _id를 1올려줌

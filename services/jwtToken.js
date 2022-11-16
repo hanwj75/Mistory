@@ -56,8 +56,7 @@ import jwt from "jsonwebtoken";
 //   });
 // };
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-// eyJ1c2VySWQiOiJoeWh5aHkiLCJpYXQiOjE2Njg0OTAwMTJ9.sv3zSrthkIKQfwSLn_erWax9u_NEHtaxbA8XdZdVDoo
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJoeWh5aHkiLCJpYXQiOjE2Njg0OTAwMTJ9.sv3zSrthkIKQfwSLn_erWax9u_NEHtaxbA8XdZdVDoo
 export const verifyToken = (req,res)=>{
   const tokenRaw = req.headers.authorization.split(" ")[1]
   const secretKey = process.env.SECRET_KEY

@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
 import { db } from "../app.js";
-
+import bcrypt from "bcrypt"
 //user
 //회원가입
 export const userData = (req, res) => {
+  const password = req.body.password
+  const encodedPw = bcrypt.hashSync(password, 10)
   db.collection("user").insertOne(
     {
       userId: req.body.userId,

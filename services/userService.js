@@ -32,44 +32,22 @@ export const userData = async (req, res) => {
     }
   });
 };
-// export const userData = async (req, res) => {
-//   const { userId, password, userName, userEmail, userPhone } = req.body;
-//   const hashed = await bcrypt.hash(password, 10);
-
-//   db.collection("user").insertOne(
-//     {
-//       userId: req.body.userId,
-//       password: hashed,
-//       userName: req.body.userName,
-//       userEmail: req.body.userEmail,
-//       userPhone: req.body.userPhone,
-//     },
-//     (err, result) => {
-//       if (result.userId === user.userId) {
-//         console.log(user.userId);
-
-//         res.status(400).json({ message: "회원가입 실패", err });
-//       } else {
-//         res
-//           .status(200)
-//           .json({ message: "회원가입 성공", userId, hashed, userName, userEmail, userPhone });
-//       }
-//     }
-//   );
-// };
 
 //로그인
 export const userLogin = (req, res) => {
   const { userId, password } = req.body;
-  db.collection("user").findOne({ userId: userId }, (err, result) => {
+  db.collection("user").findOne({ userId: userId }, async (err, result) => {
     const { userName, userEmail, userId, userPhone } = result;
+    const hashPassword = result.password;
+    const loginCheck = await bcrypt.compare(password, hashPassword);
 
     if (!result) {
       res.status(400).json({ message: "아이디가 틀렸습니다." });
       return;
     }
     console.log(result);
-    if (result.password !== password) {
+    if (loginCheck === false) {
+      console.log(loginCheck);
       res.status(400).json({ message: "비밀번호가 틀렸습니다." });
       return;
     }

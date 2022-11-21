@@ -1,32 +1,38 @@
 import jwt from "jsonwebtoken";
 import { db } from "../app.js";
 import bcrypt from "bcrypt"
-import bcryptPw from "../services/bcryptPw.js";
+
 //user
 //회원가입
 
 
 
-export const postRegister = (req, res) => {
-  const user = new bcryptPw(req.body);
-  user.save((err, userInfo) => {
-    if (err) return res.json({ success: false, err })
-    return res.status(200).json({ success: true })
-  })
-}
-export const userData = (req, res) => {
+
+//저장하려는 유저의 id와 db의 저장된 id가 같다면 오류,다르다면 회원가입을 진행시킴
+export const userData = async (req, res) => {  const user= db.collection('user').fine({userId:userId}).toArray()
+  const {userId, password,userName,userEmail,userPhone} = req.body;
+  const hashed = await bcrypt.hash(password,10);
+
   
   db.collection("user").insertOne(
     {
       userId: req.body.userId,
-      password: req.body.password,
+      password:hashed,
       userName: req.body.userName,
       userEmail: req.body.userEmail,
       userPhone: req.body.userPhone,
     },
     (err, result) => {
-      res.json({ join: result });
-    }
+     
+      if(result.userId === user.userId){
+        console.log(user.userId)
+        
+      
+     
+      res.status(400).json({ message:'회원가입 실패',err });}
+
+    else{
+      res.status(200).json({message:'회원가입 성공',userId,hashed,userName,userEmail,userPhone})}}
   );
 };
 

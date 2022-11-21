@@ -62,5 +62,4 @@ app.use("/mypage", mypageRouter);
 // 유저가 회원탈퇴 버튼을 누르면 db의 user콜렉션에서 유저의 id번호에 맞는 오브젝트를 삭제함
 
 
-//비밀번호 암호화
-const password = process.env.BCRT_PW
+

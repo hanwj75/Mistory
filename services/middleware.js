@@ -11,7 +11,9 @@ export let tokenMiddleware = (req, res, next) => {
 if(!decodedToken){
   res.status(400).json({message:"토큰이 다릅니다"})
 return
-}else{res.status(200).json({message:"토큰 확인"})
+}else{
+  return next()
+ 
 }
 };
 //토큰이 없다면 400 토큰이 틀리면 400 토큰이 맞다면 다음으로 넘어감

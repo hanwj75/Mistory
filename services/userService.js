@@ -74,14 +74,18 @@ export const userLogin = (req, res) => {
 //회원탈퇴
 // 삭제하려는 계정의 id와 db에 user콜렉션에 저장된 userId와 일치하면 삭제시켜줌
 export const userRemove = (req, res) => {
-  db.collection("user").deleteOne(req.body, (err, result) => {
-    console.log("삭제완료");
-    res.status(200).json({ message: "삭제성공" });
-    if (!result) {
-      res.status(400).json({ message: "삭제실패" });
-    }
-  });
-};
+  
+  db.collection('user').deleteOne(req.body,(err,result)=>{
+    console.log('-->',result)
+    if(result!==true){
+      res.status(400).json({message:"삭제실패",err})
+      console.log(err)
+      return false
+
+    }else if(result === true)
+    {res.status(200).json({message:"삭제성공"})}
+  })}
+
 //diary
 
 //일기 쓰기

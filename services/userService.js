@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { db } from "../app.js";
 import bcrypt from "bcrypt";
+import { verifyToken } from "./jwtToken.js";
 
 //user
 //회원가입
@@ -74,17 +75,26 @@ export const userLogin = (req, res) => {
 //회원탈퇴
 // 삭제하려는 계정의 id와 db에 user콜렉션에 저장된 userId와 일치하면 삭제시켜줌
 export const userRemove = (req, res) => {
-  
-  db.collection('user').deleteOne(req.body,(err,result)=>{
-    console.log('-->',result)
-    if(result!==true){
-      res.status(400).json({message:"삭제실패",err})
-      console.log(err)
-      return false
+  const deleteToken = verifyToken(req)
+  const deleteUser = deleteToken
 
-    }else if(result === true)
-    {res.status(200).json({message:"삭제성공"})}
-  })}
+ 
+  db.collection('user').findOne({userId:req.params.id},(err,dbId)=>{
+    const {userId}=dbId
+    console.log("id====>",deleteUser)
+  console.log("userId====>",userId)
+    
+    if(deleteUser !== userId){
+      res.status(400).json({message:"정보가 틀립니다.",err})
+      return 
+    }if(deleteUser===userId){
+  db.collection('user').deleteOne(dbId,(err,result)=>{
+    console.log('result-->',result)
+    console.log("token==>",deleteUser)
+    
+    res.status(200).json({message:"삭제완료"})
+   
+  })}})}
 
 //diary
 

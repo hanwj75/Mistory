@@ -180,9 +180,14 @@ export const diarysList = (req, res) => {
 export const userPage = (req, res) => {
   db.collection("user").findOne({ userId: req.params.id }, (err, result) => {
     console.log(result);
-    const { userId, userName, userEmail, userPhone } = result;
-    res.json({ userId: userId, userName, userEmail, userPhone });
-  });
+    ;
+    if(result===null){
+      res.status(400).json({message:"페이지를 찾을수없음",err})
+   return false
+  }else{ const { userId, userName, userEmail, userPhone } = result
+  res.json({ userMypage: userId, userName, userEmail, userPhone })
+    
+  }});
 };
 
 //마이페이지 회원정보 수정

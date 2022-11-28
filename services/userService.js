@@ -194,18 +194,18 @@ export const userPage = (req, res) => {
 //회원정보 수정 요청이 오면 이메일,폰번호,비밀번호를 바꿀수있음
 //db의 있는 유저의 데이터중 id가 일치하는 데이터의 정보를 수정한 데이터로 업데이트함
 
-export const userPageUpdate = (req, res) => {
+export const userPageUpdate = async(req, res) => {
   const { userEmail, userPhone, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10)
   db.collection("user").updateOne(
     { userId: req.params.id },
     {
-      $set: { userEmail, userPhone, password },
+      $set: { userEmail, userPhone, password:hashed },
     },
     (err, result) => {
-      res.status(200).json({ message: "수정성공" });
-      if (!result) {
-        res.status(400).json({ message: "수정실패" });
-      }
+      if(!result){
+        res.status(400).json({message:'수정안됌',err})
+      }else{res.status(200).json({message:"수정완료",userEmail,userPhone,password:hashed})}
     }
   );
 };

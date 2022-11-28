@@ -76,3 +76,6 @@ export const verifyToken = (req,res)=>{
   })
   return token
 }
+
+
+//토큰과 db에있는 유저의 데이터가 일치할때 통과를 시킴

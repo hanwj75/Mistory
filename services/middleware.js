@@ -1,3 +1,4 @@
+import { db } from "../app.js";
 import { verifyToken } from "./jwtToken.js";
 
 export let tokenMiddleware = (req, res, next) => {

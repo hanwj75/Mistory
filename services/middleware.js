@@ -37,3 +37,24 @@ return
  
 }
 };
+
+//토큰이 있으면 토큰을 검사함 검사후 일치하면 다음기능으로 넘어감
+
+export let tokenMiddleware2 = (req, res, next) => {
+ 
+  const decodedToken = verifyToken(req);
+
+
+  if (decodedToken===null) {
+    res.status(400).json({ message: "토큰 발급이 필요함" });
+  return false}
+
+if(!decodedToken){
+  console.log(userObjectId)
+  res.status(400).json({message:"토큰이 다릅니다"})
+return
+}else{
+  return next()
+ 
+}
+};

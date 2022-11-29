@@ -3,6 +3,15 @@ import { db } from "../app.js";
 import bcrypt from "bcrypt";
 import { verifyToken } from "./jwtToken.js";
 
+
+let today = new Date();   
+
+let year = today.getFullYear(); // 년도
+let month = today.getMonth() + 1;  // 월
+let date = today.getDate();  // 날짜
+let day = today.getDay();  // 요일
+
+let createdAt=(year + '/' + month + '/' + date)
 //user
 //회원가입
 
@@ -105,7 +114,10 @@ export const writeService = (req, res) => {
   db.collection("diaryCounter").findOne({ name: "diaryNumber" }, (err, result) => {
     console.log(result.allDiary);
     let allDiaryList = result.allDiary;
-    let createdAt = new Date();
+    
+
+    
+
 
     db.collection("diary").insertOne(
       {
@@ -155,7 +167,7 @@ export const diaryUpdates = (req, res) => {
 //diary 콜렉션에 있는 데이터중 _id가 내가 삭제한 게시물의 _id와 같으면 삭제시켜줌
 
 export const diaryRemove = (req, res) => {
-  db.collection("diary").deleteOne({ _id: parseInt(req.body.id) }, (err, result) => {
+  db.collection("diary").deleteOne({ _id: parseInt(req.params.id) }, (err, result) => {
     console.log("삭제완료");
     res.status(200).json({ message: "삭제성공" });
     if (!result) {

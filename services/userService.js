@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { db } from "../app.js";
 import bcrypt from "bcrypt";
 import { verifyToken } from "./jwtToken.js";
+import { syncBuiltinESMExports } from "module";
 
 
 let today = new Date();   
@@ -165,16 +166,38 @@ export const diaryUpdates = (req, res) => {
 //일기 삭제하기
 
 //diary 콜렉션에 있는 데이터중 _id가 내가 삭제한 게시물의 _id와 같으면 삭제시켜줌
-
+//db에서 다이어리의_id를 찾아서 
+// export const diaryRemove = (req, res) => {
+//   db.collection("diary").deleteOne({ _id: parseInt(req.params.id) }, (err, result) => {
+//     console.log("삭제완료");
+//     res.status(200).json({ message: "삭제성공" });
+//     if (!result) {
+//       res.status(400).json({ message: "삭제실패" });
+//     }
+//   });
+// };
 export const diaryRemove = (req, res) => {
-  db.collection("diary").deleteOne({ _id: parseInt(req.params.id) }, (err, result) => {
-    console.log("삭제완료");
-    res.status(200).json({ message: "삭제성공" });
-    if (!result) {
-      res.status(400).json({ message: "삭제실패" });
-    }
-  });
-};
+
+  const diaryId = parseInt(req.params.id)
+  db.collection('diary').findOne({_id:diaryId} ,(err,result)=>{
+    const diaryNum = result
+    let {_id}=diaryNum
+    console.log("==>",result)
+    if(_id===null){
+      res.status(400).json({message:"삭제할 게시물이 존재하지않음",err})
+   return }
+  if(_id !==diaryId){
+    res.status(400).json({message:"삭제실패"})
+    return } 
+   else{ db.collection('diary').deleteOne({_id:diaryId} ,(err,result)=>{
+  console.log('삭제결과--->',result,"삭제하려는정보-->",_id,"삭제한정보-->",diaryId)
+   res.status(200).json({message:"삭제성공"})
+   return
+  
+ })}})
+ 
+ 
+}//일기삭제 수정중
 
 //일기 목록
 //diary 콜렉션에 있는 파일 전부 보여줌

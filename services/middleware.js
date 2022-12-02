@@ -58,3 +58,24 @@ return
  
 }
 };
+
+export let tokenMiddleware3 = (req, res, next) => {
+ 
+  const decodedToken = verifyToken(req);
+const userDiaryId= { _id: parseInt(req.params.id) }
+
+  if (decodedToken===null) {
+    res.status(400).json({ message: "토큰 발급이 필요함" });
+  return false}
+
+if(!decodedToken&&!userDiaryId){
+  console.log(userDiaryId)
+  res.status(400).json({message:"토큰이 다릅니다"})
+return
+}else{
+  return next()
+ 
+}
+};
+
+// 일기삭제 미들웨어 수정중

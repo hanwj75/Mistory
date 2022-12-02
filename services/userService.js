@@ -2,17 +2,15 @@ import jwt from "jsonwebtoken";
 import { db } from "../app.js";
 import bcrypt from "bcrypt";
 import { verifyToken } from "./jwtToken.js";
-import { syncBuiltinESMExports } from "module";
 
-
-let today = new Date();   
+let today = new Date();
 
 let year = today.getFullYear(); // 년도
-let month = today.getMonth() + 1;  // 월
-let date = today.getDate();  // 날짜
-let day = today.getDay();  // 요일
+let month = today.getMonth() + 1; // 월
+let date = today.getDate(); // 날짜
+let day = today.getDay(); // 요일
 
-let createdAt=(year + '/' + month + '/' + date)
+let createdAt = year + "/" + month + "/" + date;
 //user
 //회원가입
 
@@ -85,26 +83,28 @@ export const userLogin = (req, res) => {
 //회원탈퇴
 // 삭제하려는 계정의 id와 db에 user콜렉션에 저장된 userId와 일치하면 삭제시켜줌
 export const userRemove = (req, res) => {
-  const deleteToken = verifyToken(req)
-  const deleteUser = deleteToken
+  const deleteToken = verifyToken(req);
+  const deleteUser = deleteToken;
 
- 
-  db.collection('user').findOne({userId:req.params.id},(err,dbId)=>{
-    const {userId}=dbId
-    console.log("id====>",deleteUser)
-  console.log("userId====>",userId)
-    
-    if(deleteUser !== userId){
-      res.status(400).json({message:"정보가 틀립니다.",err})
-      return 
-    }if(deleteUser===userId){
-  db.collection('user').deleteOne(dbId,(err,result)=>{
-    console.log('result-->',result)
-    console.log("token==>",deleteUser)
-    
-    res.status(200).json({message:"삭제완료"})
-   
-  })}})}
+  db.collection("user").findOne({ userId: req.params.id }, (err, dbId) => {
+    const { userId } = dbId;
+    console.log("id====>", deleteUser);
+    console.log("userId====>", userId);
+
+    if (deleteUser !== userId) {
+      res.status(400).json({ message: "정보가 틀립니다.", err });
+      return;
+    }
+    if (deleteUser === userId) {
+      db.collection("user").deleteOne(dbId, (err, result) => {
+        console.log("result-->", result);
+        console.log("token==>", deleteUser);
+
+        res.status(200).json({ message: "삭제완료" });
+      });
+    }
+  });
+};
 
 //diary
 
@@ -115,10 +115,6 @@ export const writeService = (req, res) => {
   db.collection("diaryCounter").findOne({ name: "diaryNumber" }, (err, result) => {
     console.log(result.allDiary);
     let allDiaryList = result.allDiary;
-    
-
-    
-
 
     db.collection("diary").insertOne(
       {
@@ -166,7 +162,7 @@ export const diaryUpdates = (req, res) => {
 //일기 삭제하기
 
 //diary 콜렉션에 있는 데이터중 _id가 내가 삭제한 게시물의 _id와 같으면 삭제시켜줌
-//db에서 다이어리의_id를 찾아서 
+//db에서 다이어리의_id를 찾아서
 // export const diaryRemove = (req, res) => {
 //   db.collection("diary").deleteOne({ _id: parseInt(req.params.id) }, (err, result) => {
 //     console.log("삭제완료");
@@ -177,27 +173,27 @@ export const diaryUpdates = (req, res) => {
 //   });
 // };
 export const diaryRemove = (req, res) => {
-
-  const diaryId = parseInt(req.params.id)
-  db.collection('diary').findOne({_id:diaryId} ,(err,result)=>{
-    const diaryNum = result
-    let {_id}=diaryNum
-    console.log("==>",result)
-    if(_id===null){
-      res.status(400).json({message:"삭제할 게시물이 존재하지않음",err})
-   return }
-  if(_id !==diaryId){
-    res.status(400).json({message:"삭제실패"})
-    return } 
-   else{ db.collection('diary').deleteOne({_id:diaryId} ,(err,result)=>{
-  console.log('삭제결과--->',result,"삭제하려는정보-->",_id,"삭제한정보-->",diaryId)
-   res.status(200).json({message:"삭제성공"})
-   return
-  
- })}})
- 
- 
-}//일기삭제 수정중
+  const diaryId = parseInt(req.params.id);
+  db.collection("diary").findOne({ _id: diaryId }, (err, result) => {
+    const diaryNum = result;
+    let { _id } = diaryNum;
+    console.log("==>", result);
+    if (_id === null) {
+      res.status(400).json({ message: "삭제할 게시물이 존재하지않음", err });
+      return;
+    }
+    if (_id !== diaryId) {
+      res.status(400).json({ message: "삭제실패" });
+      return;
+    } else {
+      db.collection("diary").deleteOne({ _id: diaryId }, (err, result) => {
+        console.log("삭제결과--->", result, "삭제하려는정보-->", _id, "삭제한정보-->", diaryId);
+        res.status(200).json({ message: "삭제성공" });
+        return;
+      });
+    }
+  });
+}; //일기삭제 수정중
 
 //일기 목록
 //diary 콜렉션에 있는 파일 전부 보여줌
@@ -215,32 +211,34 @@ export const diarysList = (req, res) => {
 export const userPage = (req, res) => {
   db.collection("user").findOne({ userId: req.params.id }, (err, result) => {
     console.log(result);
-    ;
-    if(result===null){
-      res.status(400).json({message:"페이지를 찾을수없음",err})
-   return false
-  }else{ const { userId, userName, userEmail, userPhone } = result
-  res.json({ userMypage: userId, userName, userEmail, userPhone })
-    
-  }});
+    if (result === null) {
+      res.status(400).json({ message: "페이지를 찾을수없음", err });
+      return false;
+    } else {
+      const { userId, userName, userEmail, userPhone } = result;
+      res.json({ userMypage: userId, userName, userEmail, userPhone });
+    }
+  });
 };
 
 //마이페이지 회원정보 수정
 //회원정보 수정 요청이 오면 이메일,폰번호,비밀번호를 바꿀수있음
 //db의 있는 유저의 데이터중 id가 일치하는 데이터의 정보를 수정한 데이터로 업데이트함
 
-export const userPageUpdate = async(req, res) => {
+export const userPageUpdate = async (req, res) => {
   const { userEmail, userPhone, password } = req.body;
-  const hashed = await bcrypt.hash(password, 10)
+  const hashed = await bcrypt.hash(password, 10);
   db.collection("user").updateOne(
     { userId: req.params.id },
     {
-      $set: { userEmail, userPhone, password:hashed },
+      $set: { userEmail, userPhone, password: hashed },
     },
     (err, result) => {
-      if(!result){
-        res.status(400).json({message:'수정안됌',err})
-      }else{res.status(200).json({message:"수정완료",userEmail,userPhone,password:hashed})}
+      if (!result) {
+        res.status(400).json({ message: "수정안됌", err });
+      } else {
+        res.status(200).json({ message: "수정완료", userEmail, userPhone, password: hashed });
+      }
     }
   );
 };

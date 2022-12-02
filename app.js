@@ -3,7 +3,7 @@ import methodOverride from "method-override";
 import { config } from "dotenv";
 import { MongoClient } from "mongodb";
 import cors from "cors";
-import bcrypt from "bcrypt"
+
 import userRouter from "./routes/user.js";
 import diaryRouter from "./routes/diary.js";
 import mypageRouter from "./routes/mypage.js";
@@ -60,6 +60,3 @@ app.use("/mypage", mypageRouter);
 // );
 
 // 유저가 회원탈퇴 버튼을 누르면 db의 user콜렉션에서 유저의 id번호에 맞는 오브젝트를 삭제함
-
-
-

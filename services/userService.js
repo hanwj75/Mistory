@@ -86,25 +86,28 @@ export const userRemove = (req, res) => {
   const deleteToken = verifyToken(req);
   const deleteUser = deleteToken;
 
-  db.collection("user").findOne({ userId: req.params.id }, (err, dbId) => {
-    const { userId } = dbId;
-    console.log("id====>", deleteUser);
-    console.log("userId====>", userId);
-
-    if (deleteUser !== userId) {
-      res.status(400).json({ message: "정보가 틀립니다.", err });
-      return;
+db.collection('user').findOne({userId:deleteUser},(err,result)=>{
+console.log("회원탈퇴하려는아이디===>",result)
+result=result.userId
+if(deleteUser!==result){
+  res.status(400).json({message:"정보가 일치하지 않습니다."})
+}else{
+  db.collection('user').deleteOne({userId:deleteToken},(err,result)=>{
+   console.log(result)
+    if(result){
+      res.status(200).json({message:'탈퇴 성공'})
+      return
+    }else{
+      res.status(400).json({message:"정상적으로 작동하지않음"})
     }
-    if (deleteUser === userId) {
-      db.collection("user").deleteOne(dbId, (err, result) => {
-        console.log("result-->", result);
-        console.log("token==>", deleteUser);
+    
+ })
+}
 
-        res.status(200).json({ message: "삭제완료" });
-      });
-    }
-  });
-};
+})
+}
+
+
 
 //diary
 

@@ -41,15 +41,18 @@ export let tokenMiddleware = (req, res, next) => {
   const decodedToken = verifyToken(req)
  
   db.collection('user').findOne({userId:decodedToken},(err,result)=>{
+      
+    
+  
     console.log('middelware==>',result)
-    result=result.userId
+   
   
   
     if(result === null){
       res.status(400).json({message:"토큰이 없음"})
       return false
     }
-    if(decodedToken!==result){
+    if(decodedToken!==result.userId){
       res.status(400).json({message:"토큰이 다름"})
       return
     }else{

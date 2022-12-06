@@ -11,6 +11,7 @@ let date = today.getDate(); // 날짜
 let day = today.getDay(); // 요일
 
 let createdAt = year + "/" + month + "/" + date;
+let updatedAt = year + "/" + month + "/" + date;
 //user
 //회원가입
 
@@ -33,9 +34,7 @@ export const userData = async (req, res) => {
         },
         (err, result) => {
           console.log(result);
-          res
-            .status(200)
-            .json({ message: "회원가입 성공!", userId, hashed, userName, userEmail, userPhone });
+          res.status(200).json(result);
         }
       );
     }
@@ -86,28 +85,24 @@ export const userRemove = (req, res) => {
   const deleteToken = verifyToken(req);
   const deleteUser = deleteToken;
 
-db.collection('user').findOne({userId:deleteUser},(err,result)=>{
-console.log("회원탈퇴하려는아이디===>",result)
-result=result.userId
-if(deleteUser!==result){
-  res.status(400).json({message:"정보가 일치하지 않습니다."})
-}else{
-  db.collection('user').deleteOne({userId:req.params.id},(err,result)=>{
-   console.log(result)
-    if(result){
-      res.status(200).json({message:'탈퇴 성공'})
-      return
-    }else{
-      res.status(400).json({message:"정상적으로 작동하지않음"})
+  db.collection("user").findOne({ userId: deleteUser }, (err, result) => {
+    console.log("회원탈퇴하려는아이디===>", result);
+    result = result.userId;
+    if (deleteUser !== result) {
+      res.status(400).json({ message: "정보가 일치하지 않습니다." });
+    } else {
+      db.collection("user").deleteOne({ userId: req.params.id }, (err, result) => {
+        console.log(result);
+        if (result) {
+          res.status(200).json(result);
+          return;
+        } else {
+          res.status(400).json({ message: "정상적으로 작동하지않음" });
+        }
+      });
     }
-    
- })
-}
-
-})
-}
-
-
+  });
+};
 
 //diary
 
@@ -126,8 +121,8 @@ export const writeService = (req, res) => {
         createdAt,
       },
       function (err, result) {
-        console.log(createdAt);
-        console.log(result);
+        console.log("저장시간==>", createdAt);
+        console.log("작성결과==>", result);
         db.collection("diaryCounter").updateOne(
           { name: "diaryNumber" },
           { $inc: { allDiary: 1 } },
@@ -135,7 +130,7 @@ export const writeService = (req, res) => {
             if (err) {
               return console.log(err);
             } else {
-              res.status(200).json({ message: "작성완료" });
+              res.status(200).json(result);
             }
           }
         );
@@ -149,14 +144,16 @@ export const writeService = (req, res) => {
 //db에 콜렉선 다이어리에 저장된 콘텐츠오브젝트 중 하나를 찾아서 수정 후 업데이트 해줌
 export const diaryUpdates = (req, res) => {
   const { contents } = req.body;
-  const updatedAt = new Date();
 
   db.collection("diary").updateOne(
     { _id: parseInt(req.body.id) },
-    { $set: { contents, updatedAt: updatedAt } },
+    { $set: { contents, createdAt: updatedAt } },
     (err, result) => {
       if (!result) {
         res.status(400).json({ message: "수정실패" });
+        return;
+      } else {
+        res.status(200).json(result);
       }
     }
   );
@@ -191,7 +188,7 @@ export const diaryRemove = (req, res) => {
     } else {
       db.collection("diary").deleteOne({ _id: diaryId }, (err, result) => {
         console.log("삭제결과--->", result, "삭제하려는정보-->", _id, "삭제한정보-->", diaryId);
-        res.status(200).json({ message: "삭제성공" });
+        res.status(200).json(result);
         return;
       });
     }
@@ -200,11 +197,11 @@ export const diaryRemove = (req, res) => {
 
 //일기 목록
 //diary 콜렉션에 있는 파일 전부 보여줌
-export const diarysList = (req, res) => {
+export const diaryList = (req, res) => {
   db.collection("diary")
     .find()
     .toArray((err, result) => {
-      res.json({ result });
+      res.json(result);
       console.log(result);
     });
 };
@@ -245,4 +242,3 @@ export const userPageUpdate = async (req, res) => {
     }
   );
 };
-//ㄴㅁㅇㅁㄴㅇ

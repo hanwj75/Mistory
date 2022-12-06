@@ -38,30 +38,22 @@ import { verifyToken } from "./jwtToken.js";
 //   }
 // };
 export let tokenMiddleware = (req, res, next) => {
-  const decodedToken = verifyToken(req)
- 
-  db.collection('user').findOne({userId:decodedToken},(err,result)=>{
-      
-    
-  
-    console.log('middelware==>',result)
-   
-  
-  
-    if(result === null){
-      res.status(400).json({message:"토큰이 없음"})
-      return false
+  const decodedToken = verifyToken(req);
+
+  db.collection("user").findOne({ userId: decodedToken }, (err, result) => {
+    console.log("middelware==>", result);
+
+    if (result === null) {
+      res.status(400).json({ message: "토큰이 없음" });
+      return false;
     }
-    if(decodedToken!==result.userId){
-      res.status(400).json({message:"토큰이 다름"})
-      return
-    }else{
-      return next()
-  }
-    
-  })
-}
+    if (decodedToken !== result.userId) {
+      res.status(400).json({ message: "토큰이 다름" });
+      return;
+    } else {
+      return next();
+    }
+  });
+};
 
 //토큰이 있으면 토큰을 검사함 검사후 일치하면 다음기능으로 넘어감
-
-

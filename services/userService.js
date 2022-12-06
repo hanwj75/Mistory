@@ -92,7 +92,7 @@ result=result.userId
 if(deleteUser!==result){
   res.status(400).json({message:"정보가 일치하지 않습니다."})
 }else{
-  db.collection('user').deleteOne({userId:deleteToken},(err,result)=>{
+  db.collection('user').deleteOne({userId:req.params.id},(err,result)=>{
    console.log(result)
     if(result){
       res.status(200).json({message:'탈퇴 성공'})

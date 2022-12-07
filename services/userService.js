@@ -8,10 +8,13 @@ let today = new Date();
 let year = today.getFullYear(); // 년도
 let month = today.getMonth() + 1; // 월
 let date = today.getDate(); // 날짜
-let day = today.getDay(); // 요일
 
-let createdAt = year + "/" + month + "/" + date;
-let updatedAt = year + "/" + month + "/" + date;
+let day = ['일','월','화','수','목','금','토'];// 요일
+
+
+
+let createdAt = year +"년"+"/" + month +"월"+"/" + date +"일"+"/"+ day[today.getDay()]+"요일";
+let updatedAt = year +"년"+"/" + month +"월"+"/" + date +"일"+"/"+ day[today.getDay()]+"요일";
 //user
 //회원가입
 
@@ -67,14 +70,14 @@ export const userLogin = (req, res) => {
           console.log(err);
           return;
         }
-        res.status(200).json({
-          message: "로그인 성공",
-          token,
+        res.status(200).json(
+         
+          {token,
           userId,
           userName,
           userEmail,
-          userPhone,
-        });
+          userPhone,}
+        );
       });
     }
   });
@@ -130,7 +133,7 @@ export const writeService = (req, res) => {
             if (err) {
               return console.log(err);
             } else {
-              res.status(200).json(result);
+              res.status(200).json({contents:diaryPost,createdAt});
             }
           }
         );
@@ -153,7 +156,7 @@ export const diaryUpdates = (req, res) => {
         res.status(400).json({ message: "수정실패" });
         return;
       } else {
-        res.status(200).json(result);
+        res.status(200).json({contents,updatedAt});
       }
     }
   );
